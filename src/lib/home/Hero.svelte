@@ -1,5 +1,6 @@
 <script>
 	import Button from '$lib/components/ui/button/Button.svelte';
+	import { GanttChart, User } from 'lucide-svelte';
 </script>
 
 <div class="px-1">
@@ -32,8 +33,14 @@
 				help you understand yourself better.
 			</p>
 			<div class="mt-10 flex items-center justify-center gap-x-6">
-				<Button>Dashboard</Button>
-				<Button variant="outline" class="border-slate-700">LogIn</Button>
+				<Button size="lg">
+					<GanttChart size="18" strokeWidth="1.5px" class="mr-2" />
+					Dashboard</Button
+				>
+				<Button href="/login" size="lg" variant="outline" class="border-slate-700">
+					<User size="18" strokeWidth="1.5px" class="mr-2" />
+					LogIn</Button
+				>
 			</div>
 		</div>
 	</div>

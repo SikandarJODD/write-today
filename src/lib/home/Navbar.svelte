@@ -1,7 +1,12 @@
 <script>
 	import Button from './../components/ui/button/Button.svelte';
 	import { page } from '$app/stores';
-	import { fade, fly, slide } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
+	import { User } from 'lucide-svelte';
+	import supabase from '$lib/db';
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+	import { isLoggedIn } from '$lib/store';
 
 	let isProfileOpen = false;
 	let isMenuOpen = false;
@@ -12,10 +17,6 @@
 		},
 		{
 			name: 'Settings',
-			href: '#'
-		},
-		{
-			name: 'Sign out',
 			href: '#'
 		}
 	];
@@ -30,6 +31,13 @@
 		}
 	];
 	$: isActive = $page.route.id;
+
+	let handleSignOut = () => {
+		supabase.auth.signOut();
+		isLoggedIn.set(false);
+		isProfileOpen = false;
+		goto('/');
+	};
 </script>
 
 <nav class="bg-[#15344b] sticky top-0 backdrop-blur-sm z-30">
@@ -78,11 +86,13 @@
 			</div>
 			<div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
 				<div class="flex flex-shrink-0 items-center">
-					<img
-						class="h-8 w-auto rounded-md"
-						src="https://i.pinimg.com/564x/45/32/60/45326058a8c932bba76cef5e3e088c90.jpg "
-						alt="Your Company"
-					/>
+					<a href="/">
+						<img
+							class="h-8 w-auto rounded-md"
+							src="https://i.pinimg.com/564x/45/32/60/45326058a8c932bba76cef5e3e088c90.jpg "
+							alt="Your Company"
+						/>
+					</a>
 				</div>
 				<div class="hidden sm:ml-6 sm:block">
 					<div class="flex space-x-4">
@@ -93,7 +103,7 @@
 								href={nav.href}
 								class="{isActive === nav.href
 									? 'bg-gray-900 text-white'
-									: 'text-gray-200'} hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+									: 'text-gray-200'} hover:bg-gray-900/60 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
 								>{nav.name}</a
 							>
 						{/each}
@@ -124,9 +134,11 @@
 						/>
 					</svg>
 				</button> -->
-				<Button variant="ghost" class="text-slate-300 border border-cyan-500 hidden md:block mr-2"
-					>Sign In</Button
-				>
+				{#if !$isLoggedIn}
+					<Button href="/login" class="border border-cyan-500 hidden md:flex mr-2">
+						<User size="18" strokeWidth="1.7px" class="mr-1" /> Sign In
+					</Button>
+				{/if}
 
 				<!-- Profile dropdown -->
 				<div class="relative ml-3">
@@ -180,6 +192,13 @@
 								id="user-menu-item-0">{item.name}</a
 							>
 						{/each}
+						<button
+							on:click={handleSignOut}
+							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 outline-none border-none w-full text-left"
+							role="menuitem"
+							tabindex="-1"
+							id="user-menu-item-0">Logout</button
+						>
 					</div>
 				</div>
 			</div>
@@ -200,7 +219,7 @@
 					href={item.href}
 					class="{isActive === item.href
 						? 'bg-gray-900 text-white'
-						: 'text-gray-300'}  hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+						: 'text-gray-300'}  hover:bg-gray-900 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
 					>{item.name}</a
 				>
 			{/each}

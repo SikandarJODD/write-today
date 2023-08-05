@@ -18,7 +18,7 @@
 - All Post : app/dashboard
 ## Achived
 
-- none
+- Auth Added
 
 
 ## Lessons Learned
