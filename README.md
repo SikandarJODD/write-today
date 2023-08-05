@@ -18,7 +18,7 @@
 - All Post : app/dashboard
 ## Achived
 
-- Auth Added
+- Auth Added <code>SignUp</code> <code>LogIn</code> <code>Logout</code>
 
 
 ## Lessons Learned
