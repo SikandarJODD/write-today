@@ -25,6 +25,13 @@
 	import { Pen } from 'lucide-svelte';
 	let isMenuOpen = true;
 	let isProfileOpen = false;
+	$: {
+		if (isProfileOpen) {
+			setTimeout(() => {
+				isProfileOpen = false;
+			}, 3000);
+		}
+	}
 	let profileNavs = [
 		{
 			name: 'Your Profile',
@@ -66,7 +73,7 @@
 		<div
 			class=" {isMenuOpen
 				? 'transition-opacity ease-linear duration-300 opacity-0 '
-				: 'opacity-100 transition-opacity ease-linear duration-300 fixed inset-0 '} fixed top-0  -z-10 bg-gray-900/80"
+				: 'opacity-100 transition-opacity ease-linear duration-300 fixed inset-0 '} fixed top-0 -z-10 bg-gray-900/80"
 		/>
 
 		<div

@@ -30,7 +30,6 @@
 				email: email,
 				password: password
 			});
-			console.log(user, session, error);
 		} catch (error) {
 			console.log(error);
 		} finally {

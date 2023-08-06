@@ -15,26 +15,31 @@
 	import { Alert, AlertDescription, AlertTitle } from '$components/ui/alert';
 
 	import supabase from '$lib/db';
+	import { goto } from '$app/navigation';
 
 	let email = '';
 	let password = '';
 	let isPopUpOpen = false;
 
 	let signUpUser = async () => {
-		
 		try {
 			const { user, session, error } = await supabase.auth.signUp({
 				email: email,
 				password: password
 			});
-			console.log(user, session, error);
+			let ispresent = await supabase.from('Profiles').select('email').eq('email', email);
+			console.log(ispresent.data);
+			if (ispresent.data?.length === 0) {
+				await supabase.from('Profiles').insert([{ email: email }]);
+			}
 		} catch (error) {
 			console.log(error);
 		} finally {
 			isPopUpOpen = true;
 			setTimeout(() => {
 				isPopUpOpen = false;
-			}, 3800);
+				goto('/login');
+			}, 1000);
 			email = '';
 			password = '';
 		}
@@ -50,23 +55,37 @@
 			><span class="text-blue-600">Write Now</span></CardDescription
 		>
 	</CardHeader>
-	<CardContent class="grid gap-4">
-		<div class="grid gap-2">
-			<Label for="email">Email</Label>
-			<Input id="email" type="email" placeholder="name@example.com" bind:value={email} />
-		</div>
-		<div class="grid gap-2">
-			<Label for="password">Password</Label>
-			<Input id="password" type="password" placeholder="Password" bind:value={password} />
-		</div>
-	</CardContent>
-	<CardFooter>
-		<Button
-			class="w-full active:scale-95 transition-all duration-200"
-			disabled={email.length === 0 || password.length < 6}
-			on:click={signUpUser}>Create Free Account</Button
-		>
-	</CardFooter>
+	<form on:submit|preventDefault={signUpUser}>
+		<CardContent class="grid gap-4">
+			<div class="grid gap-2">
+				<Label for="email">Email</Label>
+				<Input
+					id="email"
+					type="email"
+					placeholder="name@example.com"
+					bind:value={email}
+					autocomplete="on"
+				/>
+			</div>
+			<div class="grid gap-2">
+				<Label for="password">Password</Label>
+				<Input
+					id="password"
+					type="password"
+					placeholder="Your Password"
+					bind:value={password}
+					autocomplete="off"
+				/>
+			</div>
+		</CardContent>
+		<CardFooter>
+			<Button
+				class="w-full active:scale-95 transition-all duration-200"
+				disabled={email.length === 0 || password.length < 6}
+				type="submit">Create Free Account</Button
+			>
+		</CardFooter>
+	</form>
 	<div class="flex justify-center text-slate-500 pb-4 text-md">
 		<p>Already have an Account <a href="/login" class="underline text-blue-500">Login</a></p>
 	</div>

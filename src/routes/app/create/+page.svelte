@@ -1,1 +1,5 @@
-<h1>Create POST</h1>
+<script>
+	import CreatePost from '$lib/home/dashboard/CreatePost.svelte';
+</script>
+
+<CreatePost />
