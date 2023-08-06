@@ -38,7 +38,7 @@
 			isPopUpOpen = true;
 			setTimeout(() => {
 				isPopUpOpen = false;
-				goto('/');
+				goto('/app/dashboard');
 			}, 1300);
 			email = '';
 			password = '';

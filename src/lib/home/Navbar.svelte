@@ -5,7 +5,6 @@
 	import { User } from 'lucide-svelte';
 	import supabase from '$lib/db';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
 	import { isLoggedIn } from '$lib/store';
 
 	let isProfileOpen = false;
