@@ -41,8 +41,8 @@
 			id: 6
 		}
 	];
-	let proname = '';
-	let prodesc = '';
+	export let proname = '';
+	export let prodesc = '';
 	export let email = '';
 	$: imgNo = 0;
 	let updateData = async () => {
