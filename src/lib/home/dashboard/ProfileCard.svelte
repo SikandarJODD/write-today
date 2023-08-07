@@ -3,6 +3,7 @@
 	import { CheckCircle } from 'lucide-svelte';
 	import { Button } from '$components/ui/button';
 	import { Input } from '$components/ui/input';
+	import { imgsData } from '$lib/store';
 	import {
 		Card,
 		CardContent,
@@ -14,37 +15,29 @@
 	import { Avatar, AvatarFallback, AvatarImage } from '$components/ui/avatar';
 	import supabase from '$lib/db';
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
-	let imgsData = [
-		{
-			src: 'https://i.pinimg.com/564x/68/b5/77/68b577ba7cb013903567b3537fd73747.jpg',
-			id: 1
-		},
-		{
-			src: 'https://i.pinimg.com/564x/cb/20/e9/cb20e993514992e6094139a4bac417c6.jpg',
-			id: 2
-		},
-		{
-			src: 'https://i.pinimg.com/564x/66/69/92/6669920f15a4b9593e2c52589fc93621.jpg',
-			id: 3
-		},
-		{
-			src: 'https://i.pinimg.com/564x/1a/11/cf/1a11cf9d73af1466b9d76fd38d4c33ab.jpg',
-			id: 4
-		},
-		{
-			src: 'https://i.pinimg.com/564x/4d/86/dd/4d86ddf13eda96c2cab1c79489925e2e.jpg',
-			id: 5
-		},
-		{
-			src: 'https://i.pinimg.com/564x/9b/fd/d5/9bfdd53be19cb460e83cbfd735f88516.jpg',
-			id: 6
-		}
-	];
 	export let proname = '';
 	export let prodesc = '';
 	export let email = '';
 	$: imgNo = 0;
+	onMount(async () => {
+		if (localStorage.length > 0 && localStorage.getItem('supabase.auth.token') !== null) {
+			let userData = JSON.parse(localStorage.getItem('supabase.auth.token'));
+			userData = userData?.currentSession?.user;
+			email = userData?.email;
+			let { data, error } = await supabase
+				.from('Profiles')
+				.select('name,desc,img')
+				.eq('email', email);
+			if (error) console.log(error);
+			else {
+				proname = data[0].name;
+				prodesc = data[0].desc;
+				imgNo = data[0].img - 1;
+			}
+		}
+	});
 	let updateData = async () => {
 		console.log(proname, prodesc, imgNo);
 		if (email.length > 0) {
@@ -70,7 +63,7 @@
 		<div class="grid gap-2 md:w-64">
 			<Label for="imgSrc">Select Profile Image</Label>
 			<div class="flex">
-				{#each imgsData as item (item.id)}
+				{#each $imgsData as item (item.id)}
 					<button
 						class="outline-none border-none"
 						on:click={() => {

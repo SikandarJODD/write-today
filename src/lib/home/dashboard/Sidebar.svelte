@@ -1,28 +1,10 @@
-<!--
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
-<!--
-  This example requires updating your template:
-
-  ```
-  <html class="h-full bg-white">
-  <body class="h-full">
-  ```
--->
 <script>
+	import { fade } from 'svelte/transition';
 	import { page } from '$app/stores';
 	import { Pen } from 'lucide-svelte';
+	import { onMount } from 'svelte';
+	import supabase from '$lib/db';
+	import { imgsData } from '$lib/store';
 	let isMenuOpen = true;
 	let isProfileOpen = false;
 	$: {
@@ -55,6 +37,22 @@
 		}
 	];
 	$: isActive = $page.route.id;
+
+	// Let Profiles
+	let userName = 'Loffi';
+	$: userImg = 0;
+	let userDesc = '';
+	let email = '';
+	let proData;
+	onMount(async () => {
+		if (localStorage.getItem('supabase.auth.token') !== null) {
+			email = JSON.parse(localStorage.getItem('supabase.auth.token')).currentSession?.user?.email;
+			proData = await supabase.from('Profiles').select('name,img,email,desc').eq('email', email);
+			userName = proData.data[0].name;
+			userImg = proData.data[0].img - 1;
+			userDesc = proData.data[0].desc;
+		}
+	});
 </script>
 
 <div>
@@ -410,6 +408,7 @@
 	<div class="lg:pl-72">
 		<div
 			class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8"
+			in:fade
 		>
 			<button
 				type="button"
@@ -436,7 +435,7 @@
 			<!-- Separator -->
 			<div class="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
 
-			<div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 z-50">
+			<div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
 				<form class="relative flex flex-1" action="#" method="GET">
 					<label for="search-field" class="sr-only">Search</label>
 					<svg
@@ -497,14 +496,15 @@
 							<span class="sr-only">Open user menu</span>
 							<img
 								class="h-10 w-10 rounded-full bg-gray-50 ring-1 ring-gray-400"
-								src="https://i.pinimg.com/564x/9b/fd/d5/9bfdd53be19cb460e83cbfd735f88516.jpg"
+								src={$imgsData[userImg].src ||
+									'https://i.pinimg.com/564x/9b/fd/d5/9bfdd53be19cb460e83cbfd735f88516.jpg'}
 								alt=""
 							/>
 							<span class="hidden lg:flex lg:items-center">
 								<span
 									class="ml-4 text-sm font-semibold leading-6 text-gray-700 font-mono md:text-[18px] md:font-light group-hover:text-gray-900"
 									aria-hidden="true"
-									>Lofii
+									>{userName || 'Lofi'}
 								</span>
 								<svg
 									class="ml-2 h-5 w-5 text-gray-400 group-hover:text-gray-700"

@@ -1,13 +1,16 @@
 <script>
-	import { page } from '$app/stores';
+	import { fade } from 'svelte/transition';
 	import Navbar from '$lib/home/Navbar.svelte';
 	import '../app.postcss';
-	$: isDashboard = $page.route.id;
+	export let data;
+	$: isDashboard = data.path;
 </script>
 
-{#if isDashboard?.split('/')[1] !== 'app'}
+{#if isDashboard !== 'app'}
 	<!-- if the route is not /app, show the navbar -->
-	<Navbar />
+	<div transition:fade >
+		<Navbar />
+	</div>
 {/if}
 
 <slot />
