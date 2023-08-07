@@ -17,6 +17,7 @@
 
 	import supabase from '$lib/db';
 	import { goto } from '$app/navigation';
+	import { see } from '$lib/store';
 	import { isLoggedIn } from '$lib/store';
 
 	let email = '';
@@ -41,6 +42,7 @@
 			}, 1300);
 			email = '';
 			password = '';
+			see();
 		}
 	};
 </script>

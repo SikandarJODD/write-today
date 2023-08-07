@@ -5,7 +5,7 @@
 	import { User } from 'lucide-svelte';
 	import supabase from '$lib/db';
 	import { goto } from '$app/navigation';
-	import { isLoggedIn } from '$lib/store';
+	import { isWorking } from '$lib/store';
 
 	let isProfileOpen = false;
 	let isMenuOpen = false;
@@ -33,7 +33,7 @@
 
 	let handleSignOut = () => {
 		supabase.auth.signOut();
-		isLoggedIn.set(false);
+		isWorking.set(false);
 		isProfileOpen = false;
 		goto('/');
 	};
@@ -133,7 +133,7 @@
 						/>
 					</svg>
 				</button> -->
-				{#if !$isLoggedIn}
+				{#if !$isWorking}
 					<Button href="/login" class="border border-cyan-500 hidden md:flex mr-2">
 						<User size="18" strokeWidth="1.7px" class="mr-1" /> Sign In
 					</Button>

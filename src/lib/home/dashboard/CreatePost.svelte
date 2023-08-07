@@ -1,14 +1,39 @@
 <script lang="ts">
+	import PopMessage from './../PopMessage.svelte';
 	import { Send } from 'lucide-svelte';
 	import { Button } from '$components/ui/button';
 	import { Input } from '$components/ui/input';
 	import { Card, CardContent, CardFooter } from '$components/ui/card';
-	
-	let isPosted = 'Post';
+	import supabase from '$lib/db';
+	import { userEmail, username,imgno } from '$lib/store';
+
+	console.log(new Date());
+	$: console.log($userEmail, 'eorking');
+
 	let text = '';
-	let insertPost = () => {
-		text = '';
-		console.log('insertPost');
+	$: email = $userEmail;
+	$: isTrue = false;
+	let insertPost = async () => {
+		console.log(text, email);
+
+		try {
+			const { data, error } = await supabase.from('Posts').insert([
+				{
+					context: text,
+					email: email,
+					username: $username,
+					img: $imgno,
+				}
+			]);
+		} catch (e) {
+			console.log(e);
+		} finally {
+			text = '';
+			isTrue = true;
+			setTimeout(() => {
+				isTrue = false;
+			}, 1900);
+		}
 	};
 </script>
 
@@ -33,3 +58,9 @@
 		</CardFooter>
 	</form>
 </Card>
+<PopMessage
+	isPopUpOpen={isTrue}
+	titlemsg="Posted Successfully"
+	msg="Check Dashboard to see your post"
+	icon="post"
+/>

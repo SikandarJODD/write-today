@@ -1,4 +1,5 @@
 <script>
+	import { imgno, userDesc, username, userEmail, see } from '$lib/store.js';
 	import { Label } from '$components/ui/label';
 	import { CheckCircle } from 'lucide-svelte';
 	import { Button } from '$components/ui/button';
@@ -12,41 +13,19 @@
 		CardHeader,
 		CardTitle
 	} from '$components/ui/card';
-	import { Avatar, AvatarFallback, AvatarImage } from '$components/ui/avatar';
+	import { Avatar, AvatarImage } from '$components/ui/avatar';
 	import supabase from '$lib/db';
-	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
 
-	export let proname = '';
-	export let prodesc = '';
-	export let email = '';
-	$: imgNo = 0;
-	onMount(async () => {
-		if (localStorage.length > 0 && localStorage.getItem('supabase.auth.token') !== null) {
-			let userData = JSON.parse(localStorage.getItem('supabase.auth.token'));
-			userData = userData?.currentSession?.user;
-			email = userData?.email;
-			let { data, error } = await supabase
-				.from('Profiles')
-				.select('name,desc,img')
-				.eq('email', email);
-			if (error) console.log(error);
-			else {
-				proname = data[0].name;
-				prodesc = data[0].desc;
-				imgNo = data[0].img - 1;
-			}
-		}
-	});
+	let proname = $username;
+	let prodesc = $userDesc;
+	let email = $userEmail;
+	$: imgNo = $imgno;
+
 	let updateData = async () => {
-		console.log(proname, prodesc, imgNo);
 		if (email.length > 0) {
-			await supabase
-				.from('Profiles')
-				.update({ name: proname, desc: prodesc, img: imgNo })
-				.eq('email', email);
+			await supabase.from('Profiles').update({ desc: prodesc, img: imgNo }).eq('email', email);
 		}
-		goto('/app/dashboard');
+		see();
 	};
 </script>
 
@@ -58,7 +37,7 @@
 	<CardContent class="grid gap-4">
 		<div class="grid gap-2 md:w-64">
 			<Label for="name">Name</Label>
-			<Input id="name" type="text" placeholder="Your Name" bind:value={proname} />
+			<Input id="name" type="text" placeholder="Your Name" bind:value={proname} disabled />
 		</div>
 		<div class="grid gap-2 md:w-64">
 			<Label for="imgSrc">Select Profile Image</Label>
@@ -67,7 +46,7 @@
 					<button
 						class="outline-none border-none"
 						on:click={() => {
-							imgNo = item.id;
+							imgNo = item.id - 1;
 						}}
 					>
 						<Avatar
@@ -78,7 +57,7 @@
 					</button>
 				{/each}
 			</div>
-			<Label for="imgSrc">Selected Img {imgNo}</Label>
+			<Label for="imgSrc">Selected Img {$imgno+1}</Label>
 		</div>
 		<div class="grid gap-2 md:w-2/3">
 			<Label for="name">Description</Label>

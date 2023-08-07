@@ -1,5 +1,10 @@
+// @ts-nocheck
 import { writable } from "svelte/store";
+import supabase from "./db";
 
+export let imgno = writable(0);
+export let username = writable('');
+export let userDesc = writable('');
 
 export let isLoggedIn = writable(false);
 export let imgsData = writable([
@@ -28,3 +33,25 @@ export let imgsData = writable([
         id: 6
     }
 ]);
+
+export let isWorking = writable(true);
+
+
+export let userEmail = writable('');
+let e;
+
+
+export let see = async () => {
+    if (localStorage.getItem('supabase.auth.token')) {
+        e = JSON.parse(localStorage.getItem('supabase.auth.token')).currentSession?.user?.email;
+        let { data: userData } = await supabase.from('Profiles').select('name,img,desc').eq('email', e);
+        userEmail.set(e);
+        imgno.set(userData[0].img);
+        username.set(userData[0].name);
+        userDesc.set(userData[0].desc);
+        isWorking.set(true);
+    }
+    else {
+        isWorking.set(false)
+    }
+}

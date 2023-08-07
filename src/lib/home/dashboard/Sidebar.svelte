@@ -2,9 +2,7 @@
 	import { fade } from 'svelte/transition';
 	import { page } from '$app/stores';
 	import { Pen } from 'lucide-svelte';
-	import { onMount } from 'svelte';
-	import supabase from '$lib/db';
-	import { imgsData } from '$lib/store';
+	import { imgsData, imgno, userDesc, username } from '$lib/store';
 	let isMenuOpen = true;
 	let isProfileOpen = false;
 	$: {
@@ -39,20 +37,8 @@
 	$: isActive = $page.route.id;
 
 	// Let Profiles
-	let userName = 'Loffi';
-	$: userImg = 0;
-	let userDesc = '';
-	let email = '';
-	let proData;
-	onMount(async () => {
-		if (localStorage.getItem('supabase.auth.token') !== null) {
-			email = JSON.parse(localStorage.getItem('supabase.auth.token')).currentSession?.user?.email;
-			proData = await supabase.from('Profiles').select('name,img,email,desc').eq('email', email);
-			userName = proData.data[0].name;
-			userImg = proData.data[0].img - 1;
-			userDesc = proData.data[0].desc;
-		}
-	});
+
+	$: console.log($imgno, $username, $userDesc, 'wo');
 </script>
 
 <div>
@@ -496,7 +482,7 @@
 							<span class="sr-only">Open user menu</span>
 							<img
 								class="h-10 w-10 rounded-full bg-gray-50 ring-1 ring-gray-400"
-								src={$imgsData[userImg].src ||
+								src={$imgsData[$imgno].src ||
 									'https://i.pinimg.com/564x/9b/fd/d5/9bfdd53be19cb460e83cbfd735f88516.jpg'}
 								alt=""
 							/>
@@ -504,7 +490,7 @@
 								<span
 									class="ml-4 text-sm font-semibold leading-6 text-gray-700 font-mono md:text-[18px] md:font-light group-hover:text-gray-900"
 									aria-hidden="true"
-									>{userName || 'Lofi'}
+									>{$username || 'Lofi'}
 								</span>
 								<svg
 									class="ml-2 h-5 w-5 text-gray-400 group-hover:text-gray-700"

@@ -1,4 +1,5 @@
 <script>
+	import { isWorking } from '$lib/store';
 	import Button from '$lib/components/ui/button/Button.svelte';
 	import { GanttChart, User } from 'lucide-svelte';
 </script>
@@ -33,7 +34,7 @@
 				help you understand yourself better.
 			</p>
 			<div class="mt-10 flex items-center justify-center gap-x-6">
-				<Button size="lg">
+				<Button size="lg" href={$isWorking ? '/app/dashboard' : '/'}>
 					<GanttChart size="18" strokeWidth="1.5px" class="mr-2" />
 					Dashboard</Button
 				>
