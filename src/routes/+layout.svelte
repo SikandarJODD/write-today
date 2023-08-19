@@ -4,7 +4,7 @@
 	import '../app.postcss';
 	export let data;
 	$: isDashboard = data.path;
-	import { isWorking, see } from '$lib/store';
+	import { see } from '$lib/store';
 	import { onMount } from 'svelte';
 	onMount(() => {
 		see();

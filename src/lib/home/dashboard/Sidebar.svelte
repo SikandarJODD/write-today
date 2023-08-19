@@ -38,7 +38,6 @@
 
 	// Let Profiles
 
-	$: console.log($imgno, $username, $userDesc, 'wo');
 </script>
 
 <div>

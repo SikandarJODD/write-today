@@ -19,7 +19,7 @@
 			<div
 				class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
 			>
-				Today never comes again <a href="#" class="font-semibold text-indigo-600 capitalize"
+				Today never comes again <a href="/" class="font-semibold text-indigo-600 capitalize"
 					><span class="absolute inset-0 c" aria-hidden="true" />write your today
 					<span aria-hidden="true">&rarr;</span></a
 				>

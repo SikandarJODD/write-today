@@ -17,7 +17,7 @@
 	<!-- content here -->
 	<div
 		in:fly={{ x: 40, duration: 600 }}
-		class="absolute right-10 bottom-10 w-80 border border-slate-500 rounded-lg"
+		class="absolute md:right-10 md:bottom-10 w-80 border border-slate-500 rounded-lg"
 	>
 		<Alert>
 			{#if icon === 'mail'}

@@ -19,6 +19,7 @@
 
 	let email = '';
 	let password = '';
+	let username = '';
 	let isPopUpOpen = false;
 
 	let signUpUser = async () => {
@@ -28,9 +29,8 @@
 				password: password
 			});
 			let ispresent = await supabase.from('Profiles').select('email').eq('email', email);
-			console.log(ispresent.data);
 			if (ispresent.data?.length === 0) {
-				await supabase.from('Profiles').insert([{ email: email }]);
+				await supabase.from('Profiles').insert([{ email: email, img: 1, name: username, desc: '' }]);
 			}
 		} catch (error) {
 			console.log(error);
@@ -39,7 +39,7 @@
 			setTimeout(() => {
 				isPopUpOpen = false;
 				goto('/login');
-			}, 1000);
+			}, 800);
 			email = '';
 			password = '';
 		}
@@ -57,6 +57,10 @@
 	</CardHeader>
 	<form on:submit|preventDefault={signUpUser}>
 		<CardContent class="grid gap-4">
+			<div class="grid gap-2">
+				<Label for="username">Username</Label>
+				<Input id="username" type="text" placeholder="Johan Libert" bind:value={username} />
+			</div>
 			<div class="grid gap-2">
 				<Label for="email">Email</Label>
 				<Input

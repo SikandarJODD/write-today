@@ -7,7 +7,9 @@
 	export let img = 0;
 </script>
 
-<div class="flex w-fit rounded-lg border hover:border-slate-500 transition-all duration-200 bg-white m-2">
+<div
+	class="flex w-fit rounded-lg border hover:border-slate-500 transition-all duration-200 bg-white m-2"
+>
 	<div
 		class="flex items-start flex-col justify-start p-4 sm:p-6 gap-2 md:min-w-fit md:max-w-[600px]"
 	>
@@ -19,7 +21,7 @@
 				<Avatar class="mr-1 h-7 w-7">
 					<AvatarImage src={$imgsData[img].src} />
 				</Avatar>
-				<h3 class="font-light text-sm">{username}</h3>
+				<a class="font-light text-sm" href="/app/profile/{username}"> {username}</a>
 			</div>
 		</div>
 	</div>

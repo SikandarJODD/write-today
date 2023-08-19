@@ -7,9 +7,6 @@
 	import supabase from '$lib/db';
 	import { userEmail, username,imgno } from '$lib/store';
 
-	console.log(new Date());
-	$: console.log($userEmail, 'eorking');
-
 	let text = '';
 	$: email = $userEmail;
 	$: isTrue = false;
